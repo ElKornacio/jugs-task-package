@@ -16,7 +16,14 @@ export const solversMap = {
 }
 
 export default function fetchSolution<T>(solver: SolverType, params: InputParams): Promise<T> {
-    return fetch(`http://${document.location.hostname}:8185/solve?${querystring.stringify({ ...params, solver })}`).then(response => {
+    const path = `/solve?${querystring.stringify({ ...params, solver })}`;
+
+    let url = `http://${document.location.hostname}:8185${path}`;
+    if (document.location.hostname === 'jugs.plyoro.com') {
+        url = `https://jugs.plyoro.com/api${path}`;
+    }
+
+    return fetch(url).then(response => {
         return response.json();
     })
 }
