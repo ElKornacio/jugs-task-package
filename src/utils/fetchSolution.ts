@@ -16,7 +16,7 @@ export const solversMap = {
 }
 
 export default function fetchSolution<T>(solver: SolverType, params: InputParams): Promise<T> {
-    return fetch('http://localhost:8185/solve?' + querystring.stringify({ ...params, solver })).then(response => {
+    return fetch(`http://${document.location.hostname}:8185/solve?${querystring.stringify({ ...params, solver })}`).then(response => {
         return response.json();
     })
 }

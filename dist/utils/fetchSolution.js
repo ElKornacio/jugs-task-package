@@ -16,7 +16,7 @@ exports.solversMap = {
     unhurried: UnhurriedSemiSimulationalSolver_1.default,
 };
 function fetchSolution(solver, params) {
-    return fetch('http://localhost:8185/solve?' + querystring_1.default.stringify({ ...params, solver })).then(response => {
+    return fetch(`http://${document.location.hostname}:8185/solve?${querystring_1.default.stringify({ ...params, solver })}`).then(response => {
         return response.json();
     });
 }
