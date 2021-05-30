@@ -1,8 +1,11 @@
+import { ActionsIterator } from "./types/AbstractSolver";
 import InputParams from "./types/InputParams";
 import JugAction from "./types/JugAction";
 import JugsState from "./types/JugsState";
 
 export type StateProcessor = (state: JugsState) => JugsState;
+export type ExecutionStep = { action: JugAction, state: JugsState };
+export type ExecutionIterator = Generator<ExecutionStep>;
 
 export default class ActionExecutor {
 
@@ -83,6 +86,17 @@ export default class ActionExecutor {
             state = this.execute(state, action);
         }
         return state;
+    }
+
+    executionIterator(actionsIterator: ActionsIterator): ExecutionIterator {
+        const that = this;
+        return function*() {
+            let state = { x: 0, y: 0 };
+            for (let action of actionsIterator) {
+                state = that.execute(state, action);
+                yield { action, state };
+            }
+        }();
     }
 
 }
