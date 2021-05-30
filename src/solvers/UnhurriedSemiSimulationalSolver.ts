@@ -8,6 +8,7 @@ import arraysEqual from "../utils/arraysEqual";
 import fetchSolution from "../utils/fetchSolution";
 import generateTupleArray from "../utils/generateTupleArray";
 import printActions from "../utils/printActions";
+import { swapActions } from "../utils/swapAction";
 
 type ActionsList = JugAction[];
 
@@ -20,7 +21,6 @@ export default class UnhurriedSemiSimulationalSolver extends AbstractSolver<Acti
 
     getSolutions(params: InputParams): ActionsList[] {
         let { X, Y, Z } = params;
-        const executor = new ActionExecutor(params);
 
         let swap = false;
         if (X > Y) {
@@ -28,57 +28,24 @@ export default class UnhurriedSemiSimulationalSolver extends AbstractSolver<Acti
             [X, Y] = [Y, X];
         }
 
-        const str_fX = swap ? 'fY' : 'fX';
-        const str_fY = swap ? 'fX' : 'fY';
-        const str_X2Y = swap ? 'Y2X' : 'X2Y';
-        const str_Y2X = swap ? 'X2Y' : 'Y2X';
-        const str_eX = swap ? 'eY' : 'eX';
-        const str_eY = swap ? 'eX' : 'eY';
-
-        function fixAnswers(a: JugAction[][]) {
-            if (a.length === 0) {
-                return [[]];
-            }
-            return a.map(t => t.map(g => {
-                if (g === 'fX') {
-                    return str_fX;
-                } else
-                if (g === 'fY') {
-                    return str_fY;
-                } else
-                if (g === 'X2Y') {
-                    return str_X2Y;
-                } else
-                if (g === 'Y2X') {
-                    return str_Y2X;
-                } else
-                if (g === 'eX') {
-                    return str_eX;
-                } else
-                if (g === 'eY') {
-                    return str_eY;
-                } else {
-                    throw new Error('Unknown action');
-                }
-            }))
-        }
+        const executor = new ActionExecutor({ X, Y, Z });
 
         if (Z > Y) {
             return [[]];
         }
         if (Z === Y) {
-            return fixAnswers([['fY']]);
+            return [swapActions(swap, ['fY'])];
         }
         if (Z === X) {
-            return fixAnswers([['fX']]);
+            return [swapActions(swap, ['fX'])];
         }
         if (Z % X === 0) {
             const firstSol = (Z / X) * 2;
             const secondSol = 1 + ((Y - Z) / X) * 2 - 1;
             if ((Y - Z) % X === 0 && (secondSol < firstSol)) {
-                return fixAnswers([['fY' as JugAction].concat(generateTupleArray(secondSol - 1, 'Y2X', 'eX'))]);
+                return [swapActions(swap, ['fY' as JugAction].concat(generateTupleArray(secondSol - 1, 'Y2X', 'eX')))];
             } else {
-                return fixAnswers([generateTupleArray(firstSol, 'fX', 'X2Y')]);
+                return [swapActions(swap, generateTupleArray(firstSol, 'fX', 'X2Y'))];
             }
         }
         if (Y % X === 0) {
@@ -162,17 +129,17 @@ export default class UnhurriedSemiSimulationalSolver extends AbstractSolver<Acti
         const solutionX = act(true);
         const solutionY = act(false); 
         if (!solutionX.length) {
-            return fixAnswers(solutionY);
+            return solutionY.length ? solutionY.map(s => swapActions(swap, s)) : [[]];
         }
         if (!solutionY.length) {
-            return fixAnswers(solutionX);
+            return solutionX.length ? solutionX.map(s => swapActions(swap, s)) : [[]];
         }
         const aMin = Math.min(...solutionX.map(t => t.length));
         const bMin = Math.min(...solutionY.map(t => t.length));
         if (aMin < bMin) {
-            return fixAnswers(solutionX);
+            return solutionX.map(s => swapActions(swap, s));
         } else {
-            return fixAnswers(solutionY);
+            return solutionY.map(s => swapActions(swap, s));
         }
     }
 

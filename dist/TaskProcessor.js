@@ -30,9 +30,16 @@ class TaskProcessor {
         }
     }
     testCase(name, params, solver) {
-        if (!this.verifyTask(params, this.solveTask(params, solver))) {
-            console.log(`Solver "${name}" failed on params (${params.X} ${params.Y} ${params.Z})`);
+        try {
+            if (!this.verifyTask(params, this.solveTask(params, solver))) {
+                console.log(`Solver "${name}" failed on params (${params.X} ${params.Y} ${params.Z})`);
+                debugger;
+                this.solveTask(params, solver);
+            }
+        }
+        catch (err) {
             debugger;
+            this.verifyTask(params, this.solveTask(params, solver));
         }
     }
     iterator(THRESHOLD) {
@@ -40,8 +47,8 @@ class TaskProcessor {
             const start = Date.now();
             let i = 0;
             for (let X = 1; X < THRESHOLD; X++) {
-                for (let Y = X + 1; Y < THRESHOLD; Y++) {
-                    for (let Z = 1; Z < Y; Z++) {
+                for (let Y = 1; Y < THRESHOLD; Y++) {
+                    for (let Z = 1; Z < THRESHOLD; Z++) {
                         i++;
                         yield { X, Y, Z };
                     }

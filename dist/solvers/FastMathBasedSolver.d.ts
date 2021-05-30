@@ -27,7 +27,7 @@ export declare type ISolution = ISimpleSolution | INoSolution | ICompactSolution
 export default class FastMathBasedSolver extends AbstractSolver<ISolution> {
     getBestSolutionFromServer(params: InputParams): Promise<ISolution>;
     getSolutions(params: InputParams): ISolution[];
-    iterateActions(solution: ISolution): Generator<"fX" | "fY" | "eX" | "eY" | "X2Y" | "Y2X", void, unknown>;
+    iterateActions(solution: ISolution): Generator<JugAction, void, unknown>;
     printSolution(printer: AbstractPrinter, solution: ISolution): void;
     getSolutionLength(solution: ISolution): number;
 }

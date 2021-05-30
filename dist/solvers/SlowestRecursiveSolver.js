@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractSolver_1 = __importDefault(require("../types/AbstractSolver"));
 const fetchSolution_1 = __importDefault(require("../utils/fetchSolution"));
 const printActions_1 = __importDefault(require("../utils/printActions"));
+const swapAction_1 = require("../utils/swapAction");
 class SlowestRecursiveSolver extends AbstractSolver_1.default {
     async getBestSolutionFromServer(params) {
         return fetchSolution_1.default('slowest', params);
@@ -13,7 +14,7 @@ class SlowestRecursiveSolver extends AbstractSolver_1.default {
     getSolutions(params) {
         let { X, Y, Z } = params;
         if (X === Y && X !== Z) {
-            return [];
+            return [[]];
         }
         let swap = false;
         if (X > Y) {
@@ -51,7 +52,7 @@ class SlowestRecursiveSolver extends AbstractSolver_1.default {
             return [[]];
         }
         else {
-            return temp;
+            return temp.map(t => swapAction_1.swapActions(swap, t));
         }
     }
     iterateActions(solution) {

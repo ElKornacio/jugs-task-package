@@ -5,6 +5,7 @@ import JugAction from "../types/JugAction";
 import JugsState from "../types/JugsState";
 import fetchSolution from "../utils/fetchSolution";
 import printActions from "../utils/printActions";
+import { swapActions } from "../utils/swapAction";
 
 type ActionsList = JugAction[];
 
@@ -19,7 +20,7 @@ export default class SlowSimulationalSolver extends AbstractSolver<ActionsList> 
         let { X, Y, Z } = params;
 
         if (X === Y && X !== Z) {
-            return [];
+            return [[]];
         }
         let swap = false;
         if (X > Y) {
@@ -95,7 +96,7 @@ export default class SlowSimulationalSolver extends AbstractSolver<ActionsList> 
         if (temp.length === 0) {
             return [[]];
         } else {
-            return temp;
+            return temp.map(t => swapActions(swap, t));
         }
     }
 

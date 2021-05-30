@@ -3,7 +3,7 @@
   "version": "1.0.9",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ts-node src/test.ts",
     "build": "tsc",
     "prepublish": "npm run build"
   },
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ElKornacio/jugs-task-package#readme",
   "devDependencies": {
     "@types/node": "^15.6.1",
+    "ts-node": "^10.0.0",
     "typescript": "^4.3.2"
   },
   "dependencies": {

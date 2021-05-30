@@ -7,18 +7,19 @@ const ActionExecutor_1 = __importDefault(require("../ActionExecutor"));
 const AbstractSolver_1 = __importDefault(require("../types/AbstractSolver"));
 const ceilAndPart_1 = __importDefault(require("../utils/ceilAndPart"));
 const fetchSolution_1 = __importDefault(require("../utils/fetchSolution"));
+const swapAction_1 = __importDefault(require("../utils/swapAction"));
 class FastMathBasedSolver extends AbstractSolver_1.default {
     async getBestSolutionFromServer(params) {
         return fetchSolution_1.default('fast', params);
     }
     getSolutions(params) {
         let { X, Y, Z } = params;
-        const executor = new ActionExecutor_1.default(params);
         let swap = false;
         if (X > Y) {
             swap = true;
             [X, Y] = [Y, X];
         }
+        const executor = new ActionExecutor_1.default({ X, Y, Z });
         if (Z > Y) {
             return [{ type: 'no' }];
         }
@@ -197,35 +198,6 @@ class FastMathBasedSolver extends AbstractSolver_1.default {
     iterateActions(solution) {
         return function* () {
             const swap = (solution.type !== 'no') ? solution.swap : false;
-            const str_fX = swap ? 'fY' : 'fX';
-            const str_fY = swap ? 'fX' : 'fY';
-            const str_X2Y = swap ? 'Y2X' : 'X2Y';
-            const str_Y2X = swap ? 'X2Y' : 'Y2X';
-            const str_eX = swap ? 'eY' : 'eX';
-            const str_eY = swap ? 'eX' : 'eY';
-            const m = (t) => {
-                if (t === 'fX') {
-                    return str_fX;
-                }
-                else if (t === 'fY') {
-                    return str_fY;
-                }
-                else if (t === 'eX') {
-                    return str_eX;
-                }
-                else if (t === 'eY') {
-                    return str_eY;
-                }
-                else if (t === 'X2Y') {
-                    return str_X2Y;
-                }
-                else if (t === 'Y2X') {
-                    return str_Y2X;
-                }
-                else {
-                    throw new Error('Unreachable');
-                }
-            };
             if (solution.type === 'no') {
                 return;
             }
@@ -233,7 +205,7 @@ class FastMathBasedSolver extends AbstractSolver_1.default {
                 for (let action of solution.actions) {
                     for (let i = 0; i < action.n; i++) {
                         for (let c of action.chord) {
-                            yield m(c);
+                            yield swapAction_1.default(swap, c);
                         }
                     }
                 }
@@ -243,23 +215,23 @@ class FastMathBasedSolver extends AbstractSolver_1.default {
                 for (let action of solution.action.state) {
                     if (solution.action.mode === 'fX_X2Y_eY_X2Y') {
                         for (let j = 0; j < action; j++) {
-                            yield m('fX');
-                            yield m('X2Y');
+                            yield swapAction_1.default(swap, 'fX');
+                            yield swapAction_1.default(swap, 'X2Y');
                         }
                         if (i === solution.action.state.length - 1 && solution.action.lastOrphan) {
                             //
                         }
                         else {
-                            yield m('eY');
-                            yield m('X2Y');
+                            yield swapAction_1.default(swap, 'eY');
+                            yield swapAction_1.default(swap, 'X2Y');
                         }
                     }
                     else {
-                        yield m('fY');
-                        yield m('Y2X');
+                        yield swapAction_1.default(swap, 'fY');
+                        yield swapAction_1.default(swap, 'Y2X');
                         for (let j = 0; j < action; j++) {
-                            yield m('eX');
-                            yield m('Y2X');
+                            yield swapAction_1.default(swap, 'eX');
+                            yield swapAction_1.default(swap, 'Y2X');
                         }
                     }
                     i++;
