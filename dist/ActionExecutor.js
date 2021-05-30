@@ -68,6 +68,16 @@ class ActionExecutor {
         }
         return state;
     }
+    executionIterator(actionsIterator) {
+        const that = this;
+        return function* () {
+            let state = { x: 0, y: 0 };
+            for (let action of actionsIterator) {
+                state = that.execute(state, action);
+                yield { action, state };
+            }
+        }();
+    }
 }
 exports.default = ActionExecutor;
 //# sourceMappingURL=ActionExecutor.js.map
