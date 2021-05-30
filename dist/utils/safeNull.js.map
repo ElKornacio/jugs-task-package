@@ -1,0 +1,1 @@
+{"version":3,"file":"safeNull.js","sourceRoot":"","sources":["../../src/utils/safeNull.ts"],"names":[],"mappings":";;AAAA,SAAwB,QAAQ,CAAI,IAAO;IACvC,IAAI,IAAI,KAAK,IAAI,IAAI,OAAO,IAAI,KAAK,WAAW,EAAE;QAC9C,MAAM,IAAI,KAAK,CAAC,uBAAuB,CAAC,CAAC;KAC5C;IAED,OAAO,IAAsB,CAAC;AAClC,CAAC;AAND,2BAMC"}
